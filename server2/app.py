@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 import flask
 from flask import Flask, request, jsonify, redirect, url_for, render_template, session
 import csv
-import chat as chat
 import pyrebase
 from flask_cors import CORS
 
@@ -30,14 +29,10 @@ auth = firebase.auth()
 storage = firebase.storage()
 db = firebase.database()
 
-person = {"is_logged_in": False, "name": "", "email": "", "uid": ""}
-
 @app.route("/")
 def index():
     if "person" not in session or not session["person"]["is_logged_in"]:
         return redirect(url_for("login"))
-    global conversation
-    conversation = []
     return redirect(url_for("home"))
 
 
@@ -45,11 +40,7 @@ def index():
 def home():
     if "person" not in session or not session["person"]["is_logged_in"]:
         return redirect(url_for("login"))
-    generate_question = chat.generate_question("")
-    replies.append(generate_question)
-    print(generate_question)
-    conversation.append({"type": "reply", "text": generate_question})
-    return render_template("index.html", conversation=conversation)
+    return render_template("index.html", person=session["person"])
 
 
 @app.route("/about")
@@ -59,7 +50,13 @@ def about():
 
 @app.route("/project")
 def project():
-    return render_template("project.html")
+    return render_template("project.html",
+                            person=session["person"])
+
+@app.route("/timer")
+def timer():
+    return render_template("timer.html",
+                            person=session["person"])
 
 @app.route("/add_task", methods=["POST"])
 def add_task():
@@ -90,7 +87,9 @@ def todo():
         todo_list = {}
     print(todo_list)
     
-    return render_template("todo.html", todo_list=todo_list)
+    return render_template("todo.html",
+                            person=session["person"],
+                            todo_list=todo_list)
 
 @app.route("/login")
 def login():
