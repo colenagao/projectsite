@@ -33,29 +33,44 @@ db = firebase.database()
 def index():
     if "person" not in session or not session["person"]["is_logged_in"]:
         return redirect(url_for("login"))
-    return redirect(url_for("home"))
+    return redirect(url_for("project"))
 
-
-@app.route("/home")
-def home():
-    if "person" not in session or not session["person"]["is_logged_in"]:
-        return redirect(url_for("login"))
-    return render_template("index.html", person=session["person"])
 
 
 @app.route("/about")
 def about():
+    if "person" not in session or not session["person"]["is_logged_in"]:
+        return render_template("about.html")
     return render_template("about.html",
                             person=session["person"])
 
 @app.route("/project")
 def project():
+    if "person" not in session or not session["person"]["is_logged_in"]:
+        return render_template("project.html")
     return render_template("project.html",
+                            person=session["person"])
+
+@app.route("/vpc")
+def vpc():
+    if "person" not in session or not session["person"]["is_logged_in"]:
+        return render_template("vpc.html")
+    return render_template("vpc.html",
                             person=session["person"])
 
 @app.route("/timer")
 def timer():
+    if "person" not in session or not session["person"]["is_logged_in"]:
+        return render_template("timer.html")
     return render_template("timer.html",
+                            person=session["person"])
+
+
+@app.route("/vision")
+def vision():
+    if "person" not in session or not session["person"]["is_logged_in"]:
+        return render_template("vision.html")
+    return render_template("vision.html",
                             person=session["person"])
 
 @app.route("/add_task", methods=["POST"])

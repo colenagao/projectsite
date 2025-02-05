@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="theme-dark">
   <head>
-    <title>Projects</title>
+    <title>To-do List</title>
     <script
       src="https://kit.fontawesome.com/e94596872f.js"
       crossorigin="anonymous"
@@ -48,7 +48,7 @@
             </div>
             <footer class="card-footer">
                 <form action="{{ url_for('remove_task', task=key) }}" method="post">
-                    <button class="button is-danger" type="submit" >delete</button>
+                    <button class="delete is-large" type="submit" ></button>
                 </form>
             </footer>
           </div>
