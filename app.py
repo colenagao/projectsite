@@ -32,7 +32,7 @@ db = firebase.database()
 @app.route("/")
 def index():
     if "person" not in session or not session["person"]["is_logged_in"]:
-        return redirect(url_for("login"))
+        return render_template("project.html")
     return redirect(url_for("project"))
 
 
