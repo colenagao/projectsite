@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="theme-dark">
+<html class="theme-light">
   <head>
     <title>To-do List</title>
     <script
@@ -9,50 +9,46 @@
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css"
-    >
+    />
   </head>
   <body>
-    <div>
-      {% include "navbar.html" %}
-    </div>
+    <div>{% include "navbar.html" %}</div>
     <form action="/add_task" method="POST">
-        <div class="field">
-          <label class="label">Name</label>
-          <div class="control">
-            <input
-              class="input"
-              type="text"
-              name="task"
-              placeholder="Enter task"
-              required
-            />
-          </div>
+      <div class="field">
+        <label class="label">Name</label>
+        <div class="control">
+          <input
+            class="input"
+            type="text"
+            name="task"
+            placeholder="Enter task"
+            required
+          />
         </div>
-        <div class="field">
-          <div class="control">
-            <button class="button is-primary is-fullwidth" type="submit">
-              Add
-            </button>
-          </div>
+      </div>
+      <div class="field">
+        <div class="control">
+          <button class="button is-primary is-fullwidth" type="submit">
+            Add
+          </button>
         </div>
-      </form>
-    <div>  
-        {% for key, value in todo_list.items() %}
-        <li></li>
-        <div class="card">
-            <div class="card-content">
-              <p class="title">
-                Task
-              </p>
-              <p class="subtitle">{{ value }}</p>
-            </div>
-            <footer class="card-footer">
-                <form action="{{ url_for('remove_task', task=key) }}" method="post">
-                    <button class="delete is-large" type="submit" ></button>
-                </form>
-            </footer>
-          </div>
-        {% endfor %}
+      </div>
+    </form>
+    <div>
+      {% for key, value in todo_list.items() %}
+      <li></li>
+      <div class="card">
+        <div class="card-content">
+          <p class="title">Task</p>
+          <p class="subtitle">{{ value }}</p>
+        </div>
+        <footer class="card-footer">
+          <form action="{{ url_for('remove_task', task=key) }}" method="post">
+            <button class="delete is-large" type="submit"></button>
+          </form>
+        </footer>
+      </div>
+      {% endfor %}
     </div>
   </body>
 </html>
