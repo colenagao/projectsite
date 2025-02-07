@@ -1,11 +1,25 @@
 {% block navbar %}
 <header style="gap: 0.75rem; padding: 32px">
-  <nav class="navbar" role="navigation" aria-label="main navigation">
+  <nav
+    class="navbar"
+    role="navigation"
+    aria-label="main navigation"
+    style="vertical-align: middle"
+  >
     <div class="navbar-brand">
-      <a class="navbar-item" href="/">
-        <img src="/static/img/cat.png" height="160" />
+      <a href="/">
+        <img
+          height="80"
+          width="80"
+          style="
+            float: left;
+            vertical-align: middle;
+            border-radius: 50%;
+            object-fit: cover;
+          "
+          src="/static/img/profile.jpg"
+        />
       </a>
-
       <a
         role="button"
         class="navbar-burger"
