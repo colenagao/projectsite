@@ -1,79 +1,109 @@
 {% block navbar %}
+<header style="gap: 0.75rem; padding: 32px">
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="/">
+        <img src="/static/img/cat.png" height="160" />
+      </a>
 
-<nav class="navbar" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
-    <a class="navbar-item" href="/vpc">
-      <img src="/static/img/cat.png"  height="160"/>
-    </a>
-
-    <a
-      role="button"
-      class="navbar-burger"
-      aria-label="menu"
-      aria-expanded="false"
-      data-target="navMenu"
-    >
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </a>
-  </div>
-
-  <div id="navMenu" class="navbar-menu">
-    <div class="navbar-start">
-      <a class="navbar-item" href="about">Cole Nagao</a>
-
-      <a class="navbar-item" href="/project">Projects</a>
-      
-      <a class="navbar-item" href="https://github.com/colenagao" target="_blank" rel="noopener noreferrer"> Github </a>
-
-      <a class="navbar-item" href="https://www.linkedin.com/in/cole-nagao-0abb9a165/" target="_blank" rel="noopener noreferrer"> LinkedIn </a>
-
-      <a class="navbar-item" href="/about">About Me</a>
-
+      <a
+        role="button"
+        class="navbar-burger"
+        aria-label="menu"
+        aria-expanded="false"
+        data-target="navMenu"
+      >
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
     </div>
 
-    <div class="navbar-end">
-      <div class="navbar-item">
-        <div class="buttons">
-          {% if person%}
-          <div class="navbar-item">Logged in as {{ person["name"] }}</div>
-          <a class="button is-danger" href="/logout">
-            <strong>Log Out</strong>
-          </a>
-          {% else %}
-          <a class="button is-primary" href="/signup">
-            <strong>Sign up</strong>
-          </a>
-          <a class="button is-light" href="/login"> Log in </a>
-          {% endif %}
+    <div id="navMenu" class="navbar-menu">
+      <div class="navbar-start">
+        <a class="navbar-item has-text-black is-size-4" href="/project"
+          >Projects</a
+        >
+
+        <a class="navbar-item has-text-black is-size-4" href="/about"
+          >About Me</a
+        >
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link has-text-black is-size-4"> Find me on </a>
+
+          <div class="navbar-dropdown">
+            <a
+              class="navbar-item has-text-black is-size-5"
+              href="https://github.com/colenagao"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Github</a
+            >
+
+            <a
+              class="navbar-item has-text-black is-size-5"
+              href="https://www.linkedin.com/in/cole-nagao-0abb9a165/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              LinkedIn
+            </a>
+
+            <a
+              class="navbar-item has-text-black is-size-5"
+              href="https://drive.google.com/file/d/1Kga7CgVKo63hPbfgZ9BYoP1ug0a8lYwj/view?usp=sharing"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Resume</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="buttons">
+            {% if person%}
+            <div class="navbar-item has-text-black">
+              Logged in as {{ person["name"] }}
+            </div>
+            <a class="button is-danger has-text-black" href="/logout">
+              <strong>Log Out</strong>
+            </a>
+            {% else %}
+            <a class="button is-primary has-text-black" href="/signup">
+              <strong>Sign up</strong>
+            </a>
+            <a class="button is-light has-text-black" href="/login"> Log in </a>
+            {% endif %}
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</nav>
+  </nav>
+</header>
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener("DOMContentLoaded", () => {
+    // Get all "navbar-burger" elements
+    const $navbarBurgers = Array.prototype.slice.call(
+      document.querySelectorAll(".navbar-burger"),
+      0
+    );
 
-// Get all "navbar-burger" elements
-const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+    // Add a click event on each of them
+    $navbarBurgers.forEach((el) => {
+      el.addEventListener("click", () => {
+        // Get the target from the "data-target" attribute
+        const target = el.dataset.target;
+        const $target = document.getElementById(target);
 
-// Add a click event on each of them
-$navbarBurgers.forEach( el => {
-  el.addEventListener('click', () => {
-
-    // Get the target from the "data-target" attribute
-    const target = el.dataset.target;
-    const $target = document.getElementById(target);
-
-    // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-    el.classList.toggle('is-active');
-    $target.classList.toggle('is-active');
-
+        // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+        el.classList.toggle("is-active");
+        $target.classList.toggle("is-active");
+      });
+    });
   });
-});
-
-});
 </script>
 {% endblock %}
