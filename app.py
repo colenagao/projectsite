@@ -45,13 +45,6 @@ def about():
     return render_template("about.html",
                             person=session["person"])
 
-@app.route("/project")
-def project():
-    if "person" not in session or not session["person"]["is_logged_in"]:
-        return render_template("project.html")
-    return render_template("project.html",
-                            person=session["person"])
-
 @app.route("/vpc")
 def vpc():
     if "person" not in session or not session["person"]["is_logged_in"]:
