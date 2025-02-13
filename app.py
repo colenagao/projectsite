@@ -52,6 +52,13 @@ def vpc():
     return render_template("vpc.html",
                             person=session["person"])
 
+@app.route("/recipe")
+def recipe():
+    if "person" not in session or not session["person"]["is_logged_in"]:
+        return render_template("recipe.html")
+    return render_template("recipe.html",
+                            person=session["person"])
+
 @app.route("/timer")
 def timer():
     if "person" not in session or not session["person"]["is_logged_in"]:
@@ -116,7 +123,6 @@ def result():
         try:
             # Try signing in the user with the given information
             user = auth.sign_in_with_email_and_password(email, password)
-            print(user)
             # Insert the user data in the session object
             session["person"] = {
                 "is_logged_in": True,
@@ -130,15 +136,14 @@ def result():
                 .get()
                 .val()["balance"],
             }
-            print(session["person"])
             # Redirect to welcome page
-            return redirect(url_for("index"))
+            return redirect(url_for("todo"))
         except:
             # If there is any error, redirect back to login
             return redirect(url_for("login"))
     else:
         if session.get("person") and session["person"]["is_logged_in"]:
-            return redirect(url_for("index"))
+            return redirect(url_for("todo"))
         else:
             return redirect(url_for("login"))
 
@@ -191,11 +196,9 @@ def register():
 
             db.child("users").child(session["person"]["uid"]).set(data, session["person"]["token"])
             # Go to welcome page
-            print("Redirecting to index")
             return redirect(url_for("index"))
         except:
             # If there is any error, redirect to register
-            print("Error")
             return redirect(url_for("register"))
 
     else:
