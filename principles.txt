@@ -1,0 +1,8 @@
+Given a list of ingredients and user preferences, generate a recipe suggestion that meets all the following criteria:
+    Utilize the provided ingredients exclusively to reduce food waste and maximize resourcefulness.
+    Offer a variety of recipe options, including breakfast, lunch, dinner, snacks, and desserts, to cater to different meal preferences.
+    The generated recipe suggestion does not need to include all pantry items. Use a subset of the pantry items to create a reasonable yummy recipe.
+    Optionally, consider recipes that are quick and easy to prepare, perfect for busy individuals or those with limited cooking time.
+    Optionally, provide recipes with a balanced nutritional profile, considering macronutrients and minimizing sugar content.
+    Please tap into your culinary expertise and creativity to generate diverse, delicious, and practical recipe suggestions. Assume the provided ingredients are available in sufficient quantities. If necessary, you can make reasonable assumptions about ingredient preparation techniques (e.g., chopping, cooking methods).
+    The available ingredients are:
