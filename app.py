@@ -150,6 +150,8 @@ def login():
 @app.route("/response", methods=["POST", "GET"])
 def response():
     if request.method == "POST":  # Only if data has been posted
+        if "person" not in session or not session["person"]["is_logged_in"]:
+            return redirect(url_for("login"))
         user_id = session["person"]["uid"]
         pantry = db.child("users").child(user_id).child("pantry").get().val()
         generate_response = chat.generate_response(str(pantry))
@@ -185,13 +187,13 @@ def result():
                 "response": "",
             }
             # Redirect to welcome page
-            return redirect(url_for("todo"))
+            return redirect(url_for("index"))
         except:
             # If there is any error, redirect back to login
             return redirect(url_for("login"))
     else:
         if session.get("person") and session["person"]["is_logged_in"]:
-            return redirect(url_for("todo"))
+            return redirect(url_for("index"))
         else:
             return redirect(url_for("login"))
 
