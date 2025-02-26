@@ -2,12 +2,20 @@ import os, sys, httplib2, datetime, pyrebase
 from dotenv import load_dotenv
 import flask
 from flask import Flask, request, jsonify, redirect, url_for, render_template, session
+from flask_session import Session
 import csv
 import pyrebase
 from flask_cors import CORS
+import chat as chat
+import markdown as markdown
+from bs4 import BeautifulSoup
+
 
 app = Flask(__name__)
 app.secret_key = "password" # Secret key for the session object
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
 
 messages = []
 replies = []
@@ -54,10 +62,20 @@ def vpc():
 
 @app.route("/recipe")
 def recipe():
+    # Perform redirects for login or to refresh oauth token
     if "person" not in session or not session["person"]["is_logged_in"]:
-        return render_template("recipe.html")
+        return redirect(url_for("login"))
+    user_id = session["person"]["uid"]
+    pantry = db.child("users").child(user_id).child("pantry").get().val()
+    if pantry is None:
+        pantry = {}
+    
+    response = markdown.markdown(session["person"]['response'])
+    print(response)
     return render_template("recipe.html",
-                            person=session["person"])
+                            person=session["person"],
+                            response=response,
+                            pantry=pantry)
 
 @app.route("/timer")
 def timer():
@@ -92,6 +110,24 @@ def remove_task(task):
         db.child("users").child(session["person"]["uid"]).child("tasks").child(str(task)).remove()
     return redirect(url_for("todo"))
 
+@app.route("/add_ingredient", methods=["POST"])
+def add_ingredient():
+    if "person" not in session or not session["person"]["is_logged_in"]:
+        return redirect(url_for("login"))
+    if request.method == "POST":  # Only listen to POST
+        result = request.form  # Get the data submitted
+        task = result["task"]
+        db.child("users").child(session["person"]["uid"]).child("pantry").push(task, session["person"]["token"])
+    return redirect(url_for("recipe"))
+
+@app.route("/remove_ingredient/<ingredient>", methods=["POST"])
+def remove_ingredient(ingredient):
+    if "person" not in session or not session["person"]["is_logged_in"]:
+        return redirect(url_for("login"))
+    if request.method == "POST":  # Only listen to POST
+        db.child("users").child(session["person"]["uid"]).child("pantry").child(str(ingredient)).remove()
+    return redirect(url_for("recipe"))
+
 @app.route("/todo")
 def todo():
     # Perform redirects for login or to refresh oauth token
@@ -111,7 +147,18 @@ def todo():
 def login():
     return render_template("login.html")
 
-
+@app.route("/response", methods=["POST", "GET"])
+def response():
+    if request.method == "POST":  # Only if data has been posted
+        user_id = session["person"]["uid"]
+        pantry = db.child("users").child(user_id).child("pantry").get().val()
+        generate_response = chat.generate_response(str(pantry))
+        print(generate_response)
+        session["person"]["response"] = generate_response
+        print(session["person"])
+        return redirect(url_for("recipe"))
+    else:
+        return redirect(url_for("home"))
 
 # If someone clicks on login, they are redirected to /result
 @app.route("/result", methods=["POST", "GET"])
@@ -135,6 +182,7 @@ def result():
                 .child(user["localId"])
                 .get()
                 .val()["balance"],
+                "response": "",
             }
             # Redirect to welcome page
             return redirect(url_for("todo"))
@@ -185,6 +233,7 @@ def register():
                 "name": name,
                 "prev_claim": current_day,
                 "balance": 100,
+                "response": "",
             }
             # Append data to the firebase realtime database
             data = {
@@ -206,40 +255,6 @@ def register():
             return redirect(url_for("index"))
         else:
             return redirect(url_for("signup"))
-
-# enable CORS
-CORS(app, resources={r'/*': {'origins': '*'}})
-
-
-# sanity check route
-@app.route('/ping', methods=['GET'])
-def ping_pong():
-    return jsonify('pong!')
-
-ABOUT = [
-    {
-        'title': 'On the Road',
-        'author': 'Jack Kerouac',
-        'read': True
-    },
-    {
-        'title': 'Harry Potter and the Philosopher\'s Stone',
-        'author': 'J. K. Rowling',
-        'read': False
-    },
-    {
-        'title': 'Green Eggs and Ham',
-        'author': 'Dr. Seuss',
-        'read': True
-    }
-]
-
-@app.route('/personal', methods=['GET'])
-def personal():
-    return jsonify({
-        'status': 'success',
-        'books': ABOUT
-    })
 
 if __name__ == "__main__":
     app.run(port=int(os.environ.get("PORT", 5001)), host="0.0.0.0", debug=True)
